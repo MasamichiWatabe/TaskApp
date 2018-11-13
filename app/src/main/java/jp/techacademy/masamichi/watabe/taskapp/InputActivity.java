@@ -92,7 +92,6 @@ public class InputActivity extends AppCompatActivity {
         mContentEdit = (EditText)findViewById(R.id.content_edit_text);
         mCategoryEdit = (EditText)findViewById(R.id.category_edit_text);        // [課題]カテゴリ入力部分のUI部品追加
 
-
         // EXTRA_TASK から Task の id を取得して、 id から Task のインスタンスを取得する
         Intent intent = getIntent();                                         // クラス(ファイル)の垣根を越えてTaskを渡す必要があり、活躍するのがIntent
         int taskId = intent.getIntExtra(MainActivity.EXTRA_TASK, -1);   // EXTRA_TASKからTaskのidを取り出す。EXTRA_TASKが設定されてない場合は-1が代入。
