@@ -126,6 +126,7 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
+        reloadListView();
 
         // [課題]検索処理追加
         searchButton.setOnClickListener(new AdapterView.OnClickListener() {
@@ -133,30 +134,34 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 String text = searchEdit.getText().toString();
-                if(text != null) {
+                if(text.length() == 0) {
+                    reloadListView();
+
+                }else{
+//                    Toast.makeText(MainActivity.this,"入力してください",Toast.LENGTH_SHORT).show();
                     RealmResults<Task> results = mRealm.where(Task.class).equalTo("category", text).findAll();
                     mTaskRealmResults = results;
-                    reloadListView();
-                }else{
-                    Toast.makeText(MainActivity.this,"入力してください",Toast.LENGTH_SHORT).show();
+                    searchListView();
                 }
             }
         });
-
-
-        reloadListView();
     }
 
     private void reloadListView() {
-/*
+
         // Realmのデータベースから取得した内容を別の場所で使う場合は直接ではなくこのようにコピーして渡す必要がある。
         // Realmデータベースから、「全てのデータを取得(findAll)して新しい日時(date)順に並べた(Sort.DESCENDING)結果」を取得
         RealmResults<Task> taskRealmResults = mRealm.where(Task.class).findAll().sort("date", Sort.DESCENDING);
         // 上記の結果を、TaskList としてセットする
         mTaskAdapter.setTaskList(mRealm.copyFromRealm(taskRealmResults));
         // TaskのListView用のアダプタに渡す
-*/
-        // [課題]全データ表示ではなく検索結果表示のため一部書き換え
+        mListView.setAdapter(mTaskAdapter);
+        // 表示を更新するために、アダプターにデータが変更されたことを知らせる
+        mTaskAdapter.notifyDataSetChanged();
+    }
+
+    private void searchListView() {
+        // [課題]
         ArrayList<Task> taskArrayList = new ArrayList<>();
 
         for (int i = 0; i < mTaskRealmResults.size(); i++) {
@@ -175,6 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
         mTaskAdapter.setTaskList(taskArrayList);
 
+        // TaskのListView用のアダプタに渡す
         mListView.setAdapter(mTaskAdapter);
         // 表示を更新するために、アダプターにデータが変更されたことを知らせる
         mTaskAdapter.notifyDataSetChanged();
